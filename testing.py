@@ -1,4 +1,3 @@
-#%%
 from Portfolio import Buy_Portfolio, Sell_Portfolio, Combine_result, Plot
 import yfinance as yf
 from finta import TA

@@ -1,4 +1,3 @@
-#%%
 from Portfolio import Buy_Portfolio, Sell_Portfolio, Combine_result, Plot
 import datetime as dt
 from datetime import timedelta
@@ -55,5 +54,3 @@ comb.combine()
 ploting = Plot(port.trade_df['CumReturn'], port2.trade_df['CumReturn'], comb.final['CumReturn'],
                comb.day_wise['CumReturn'], 'SBIN')
 ploting.plot()
-
-# %%

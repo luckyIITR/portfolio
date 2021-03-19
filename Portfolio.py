@@ -58,7 +58,7 @@ class Buy_Portfolio:
         self.trade_df['CumReturn'] = ((self.trade_df['%change'] / 100 + 1).cumprod() - 1) * 100
         self.check_order_book()
         self.day_wise_fun()
-        # self.result()
+        self.result()
         # print(self.trade_df)
 
     def result(self):
@@ -170,7 +170,7 @@ class Sell_Portfolio:
         self.trade_df['CumReturn'] = ((self.trade_df['%change'] / 100 + 1).cumprod() - 1) * 100
         self.check_order_book()
         self.day_wise_fun()
-        # self.result()
+        self.result()
         # print(self.trade_df)
 
     def result(self):
