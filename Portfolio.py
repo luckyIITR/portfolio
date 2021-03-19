@@ -237,15 +237,15 @@ class Combine_result:
     def combine(self):
         if len(self.df1) > 0 and len(self.df2) > 0:
             self.final = pd.concat([self.df1, self.df2], axis=0)
-            self.final = self.final[['BP', 'SP']]
+            self.final = self.final[['BP', 'SP']].copy()
             self.final.sort_index(axis=0, inplace=True)
         elif len(self.df1) > 0 and len(self.df2) == 0:
             self.final = self.df1
-            self.final = self.final[['BP', 'SP']]
+            self.final = self.final[['BP', 'SP']].copy()
             self.final.sort_index(axis=0, inplace=True)
         elif len(self.df1) == 0 and len(self.df2) > 0:
             self.final = self.df2
-            self.final = self.final[['BP', 'SP']]
+            self.final = self.final[['BP', 'SP']].copy()
             self.final.sort_index(axis=0, inplace=True)
         self.final['%change'] = (self.final['SP'] - self.final['BP']) / self.final['BP'] * 100
         self.final['CumReturn'] = ((self.final['%change'] / 100 + 1).cumprod() - 1) * 100
@@ -318,21 +318,25 @@ class Plot:
         import matplotlib.pyplot as plt
         f, ax = plt.subplots(2, 2, figsize=(16, 9), dpi=90, facecolor='w', edgecolor='k')
         f.suptitle(self.symbol)
-        ax[0, 0].plot(self.df1)  # row=0, col=0
-        ax[0, 0].title.set_text('Trade Wise Return BUY SIDE')
-        ax[0, 0].grid()
+        if len(self.df1) != 0:
+            ax[0, 0].plot(self.df1)  # row=0, col=0
+            ax[0, 0].title.set_text('Trade Wise Return BUY SIDE')
+            ax[0, 0].grid()
 
-        ax[0, 1].plot(self.df2, 'b')  # row=1, col=0
-        ax[0, 1].title.set_text('Trade Wise Return SELL SIDE')
-        ax[0, 1].grid()
+        if len(self.df2) != 0:
+            ax[0, 1].plot(self.df2, 'b')  # row=1, col=0
+            ax[0, 1].title.set_text('Trade Wise Return SELL SIDE')
+            ax[0, 1].grid()
 
-        ax[1, 0].plot(self.df3, 'g')  # row=0, col=1
-        ax[1, 0].title.set_text('TOTAL Return Trade wise')
-        ax[1, 0].grid()
+        if len(self.df3) != 0:
+            ax[1, 0].plot(self.df3, 'g')  # row=0, col=1
+            ax[1, 0].title.set_text('TOTAL Return Trade wise')
+            ax[1, 0].grid()
 
-        ax[1, 1].plot(self.df4, 'k')  # row=1, col=1
-        ax[1, 1].title.set_text('TOTAL Return Day Wise')
-        ax[1, 1].grid()
+        if len(self.df4) != 0:
+            ax[1, 1].plot(self.df4, 'k')  # row=1, col=1
+            ax[1, 1].title.set_text('TOTAL Return Day Wise')
+            ax[1, 1].grid()
         # txt="I need the caption to be present a little below X-axis\n" \
         #     "I need the caption to be present a little below X-axis"
         # f.text(.05,.05,txt)

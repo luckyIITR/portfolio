@@ -1,3 +1,4 @@
+#%%
 from Portfolio import Buy_Portfolio, Sell_Portfolio, Combine_result, Plot
 import yfinance as yf
 from finta import TA
@@ -20,7 +21,7 @@ def get_today(df, date):
 data = get_data('HDFCBANK.NS', 60)
 data['ATR'] = TA.ATR(data)
 data = pd.concat([data, TA.MACD(data)], axis=1)
-dates = sorted(list(set(data.index.date)))[1:]
+dates = sorted(list(set(data.index.date)))[1:-1]
 
 port1 = Buy_Portfolio('HDFCBANK')
 bp = -1
@@ -53,5 +54,23 @@ for date in dates:
             port1.square_off(today.loc[e, 'Open'], e)
             flag = 0
 port1.analysis()
-print(port1.trade_df)
-print(port1.day_wise)
+# print(port1.trade_df)
+# print(port1.day_wise)
+
+df1 = port1.trade_df
+gf1 = pd.DataFrame()
+comb = Combine_result(df1, gf1, 'SBIN')
+comb.combine()
+print(comb.final)
+print(comb.day_wise)
+
+
+# ploting
+df1 = port1.trade_df['CumReturn']
+df2 = gf1
+df3 = comb.final['CumReturn']
+df4 = comb.day_wise['CumReturn']
+
+ploting = Plot(df1, df2, df3,df4,'SBIN')
+ploting.plot()
+
