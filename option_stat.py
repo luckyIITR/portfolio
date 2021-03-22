@@ -37,7 +37,7 @@ def get_peaks(today):
 
 for sym in os.listdir(dbd):
     # break
-    sym = 'BANKNIFTY MAR 32000.0 PE.txt'
+    # sym = 'BANKNIFTY MAR 32000.0 PE.txt'
     df_5min = get_data(sym)
     df_5min.dropna(inplace=True)
     df_5min = df_5min.rename({'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close'}, axis=1)
@@ -71,4 +71,4 @@ for sym in os.listdir(dbd):
     port2.analysis()
 
     # port2.trade_df['CumReturn'].plot()
-port2.trade_df
+# port2.trade_df

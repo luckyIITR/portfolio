@@ -166,28 +166,28 @@ class Sell_Portfolio:
         self.trade_df.rename(columns={'Price': 'SP'}, inplace=True)
         self.trade_df = self.trade_df[['Time', 'SP', 'BP']]
         self.trade_df.set_index('Time', inplace=True, drop=True)
-        self.trade_df['%change'] = (self.trade_df['SP'] - self.trade_df['BP']) / self.trade_df['BP'] * 100
-        self.trade_df['CumReturn'] = ((self.trade_df['%change'] / 100 + 1).cumprod() - 1) * 100
+        self.trade_df['change'] = self.trade_df['SP'] - self.trade_df['BP']
+        self.trade_df['CumReturn'] = self.trade_df['change'].cumsum()
         self.check_order_book()
         self.day_wise_fun()
         self.result()
         # print(self.trade_df)
 
     def result(self):
-        gains = self.trade_df['%change'][self.trade_df['%change'] >= 0].sum()
-        ng_count = len(self.trade_df[self.trade_df['%change'] >= 0])
-        losses = self.trade_df['%change'][self.trade_df['%change'] < 0].sum()
-        nl_count = len(self.trade_df[self.trade_df['%change'] < 0])
+        gains = self.trade_df['change'][self.trade_df['change'] >= 0].sum()
+        ng_count = len(self.trade_df[self.trade_df['change'] >= 0])
+        losses = self.trade_df['change'][self.trade_df['change'] < 0].sum()
+        nl_count = len(self.trade_df[self.trade_df['change'] < 0])
         if ng_count > 0:
             avgGain = gains / ng_count
-            maxR = self.trade_df['%change'].max()
+            maxR = self.trade_df['change'].max()
             maxR = str(round(maxR, 2))
         else:
             avgGain = 0
             maxR = 'undefined'
         if nl_count > 0:
             avgLoss = losses / nl_count
-            maxL = self.trade_df['%change'].min()
+            maxL = self.trade_df['change'].min()
             ratio = str(-avgGain / avgLoss)
         else:
             avgLoss = 0
@@ -209,21 +209,21 @@ class Sell_Portfolio:
         print("Average Loss: " + str(round(avgLoss, 2)))
         print("Max Return: " + maxR)
         print("Max Loss: " + str(maxL))
-        print("Total return over " + str(ng_count + nl_count) + " trades: " + str(totalR) + "%")
+        print("Total return over " + str(ng_count + nl_count) + " trades: " + str(totalR))
         print("###############################################################")
         print()
 
     def day_wise_fun(self):
         df = self.trade_df.copy()
-        df = df[['BP', 'SP', '%change']]
+        df = df[['BP', 'SP', 'change']]
         dates = sorted(list(set(df.index.date)))
         for date in dates:
             df1 = df[df.index.date == date].copy()
-            df1['cumpro'] = ((df1['%change'] / 100 + 1).cumprod() - 1) * 100
+            df1['cumpro'] = df1['change'].cumsum()
             self.day_wise = self.day_wise.append(pd.DataFrame({'Date': [date],
                                                                'Day_return': [df1['cumpro'].iloc[-1]]}))
         self.day_wise.set_index('Date', inplace=True, drop=True)
-        self.day_wise['CumReturn'] = ((self.day_wise['Day_return'] / 100 + 1).cumprod() - 1) * 100
+        self.day_wise['CumReturn'] = self.day_wise['Day_return'].cumsum()
 
 
 class Combine_result:
